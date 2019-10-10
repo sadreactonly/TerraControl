@@ -1,0 +1,86 @@
+
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:minWidth="25px"
+	android:minHeight="25px"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:id="@+id/linearLayout1" >
+        <LinearLayout
+        android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout2" >
+           <Button
+		    android:text="Connect"
+		    android:layout_width="wrap_content"
+		    android:layout_height="match_parent"
+		    android:id="@+id/button1" />
+	       <Button
+		    android:text="Disconnect"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/button2" />
+        </LinearLayout>
+	
+    <LinearLayout
+        android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout3">
+        <Button
+        android:text="Get temperature"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/button4" />
+        <TextView
+            android:text="No Data"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:id="@+id/textView1"/>    
+    </LinearLayout>
+   
+    <LinearLayout
+        android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout4">
+        <Button
+            android:text="Get humidity"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/button5" />
+        <TextView
+            android:text="No data"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:id="@+id/textView2"/>
+    </LinearLayout>   
+
+    <Button
+		android:text="Light on."
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/button3" />
+    <Button
+        android:text="Set color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button6" />
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar1"
+        /> 
+</LinearLayout>
