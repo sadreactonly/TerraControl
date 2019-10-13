@@ -5,6 +5,7 @@ using Android.Support.V7.App;
 using Android.Runtime;
 using Android.Widget;
 using Android.Bluetooth;
+using Android.Views;
 using System.Threading;
 using System.Linq;
 using Android.Util;
@@ -24,9 +25,11 @@ namespace TerraControl.Services
 		BluetoothAdapter adapter = BluetoothAdapter.DefaultAdapter;
 		BluetoothDevice device;
 		Activity activity;
-		public CommunicationService()
-		{
+		ProgressBar progressBar;
 
+		public CommunicationService(Activity ac)
+		{
+			activity = ac;
 		}
 
 		public bool Connect()
@@ -63,7 +66,9 @@ namespace TerraControl.Services
 
 			try
 			{
-				socket.Connect();
+
+					socket.Connect();
+		
 
 
 				listenThread = new Thread(Listener);

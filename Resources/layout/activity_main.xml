@@ -24,8 +24,11 @@
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:id="@+id/button2" />
-        </LinearLayout>
-	
+     </LinearLayout>
+	<View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@android:color/darker_gray"/>
     <LinearLayout
         android:orientation="horizontal"
         android:minWidth="25px"
@@ -68,19 +71,29 @@
             android:id="@+id/textView2"/>
     </LinearLayout>   
 
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout5" >
     <Button
 		android:text="Light on."
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
 		android:id="@+id/button3" />
+
     <Button
         android:text="Set color"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+       	android:layout_width="wrap_content"
+		android:layout_height="match_parent"
         android:id="@+id/button6" />
-    <SeekBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/seekBar1"
-        /> 
+    <View
+            android:layout_width="50dp"
+            android:layout_height="48dp"
+            android:id="@+id/view1" />
+      </LinearLayout>
+
 </LinearLayout>
