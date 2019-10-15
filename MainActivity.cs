@@ -18,21 +18,26 @@ namespace TerraControl
     {
 		bool isSendClicked = false;
 
-		Button buttonConnect;
-		Button buttonDisconnect;
-		Button buttonSendCommand;
-		Button temperatureButton;
-		Button humidityButton;
-		Button colorDialogButton;
+		ImageButton buttonLightCommand;
+		ImageButton temperatureButton;
+		ImageButton humidityButton;
+		ImageButton colorDialogButton;
+		ImageButton fanButton;
+		ImageButton waterButton;
+
+		Switch switchBT;
 
 		TextView temperatureText;
 		TextView humidityText;
+		TextView buttonLightText;
+
 		CommunicationService communicationService;
+		ProgressBar progressBar;
 
 		ColorPickerDialog colorDialog;
-		View colorView;
 
 		Color color;
+		bool isFanOn = false;
 
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
@@ -47,7 +52,6 @@ namespace TerraControl
 			SetUIComponentsHandlers();
 		}
 
-
 		public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
 		{
 			Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -56,61 +60,106 @@ namespace TerraControl
 		}
 
 		#region UI
+		private void GetUIComponents()
+		{
+			buttonLightCommand = FindViewById<ImageButton>(Resource.Id.imageButton3);
+			temperatureButton = FindViewById<ImageButton>(Resource.Id.imageButton2);
+			humidityButton = FindViewById<ImageButton>(Resource.Id.imageButton1);
+			colorDialogButton = FindViewById<ImageButton>(Resource.Id.imageButton4);
+			temperatureText = FindViewById<TextView>(Resource.Id.textView1);
+			humidityText = FindViewById<TextView>(Resource.Id.textView2);
+			buttonLightText = FindViewById<TextView>(Resource.Id.textView3);
+			switchBT = FindViewById<Switch>(Resource.Id.switch1);
+			progressBar = FindViewById<ProgressBar>(Resource.Id.progressBar1);
+			fanButton = FindViewById<ImageButton>(Resource.Id.imageButton5);
+
+		}
+
 		private void SetUIComponents()
 		{
-			buttonDisconnect.Enabled = false;
 			temperatureButton.Enabled = false;
 			humidityButton.Enabled = false;
-			buttonSendCommand.Enabled = false;
+			buttonLightCommand.Enabled = false;
 		}
 
 		private void SetUIComponentsHandlers()
 		{
-			buttonConnect.Click += ButtonConnect_Click;
-			buttonDisconnect.Click += ButtonDisconnect_Click;
-			buttonSendCommand.Click += ButtonSendCommand_Click;
+	
+
+			buttonLightCommand.Click += ButtonSendCommand_Click;
 			temperatureButton.Click += GetTemperature_Click;
 			humidityButton.Click += GetHumidity_Click;
 			colorDialogButton.Click += ColorDialogButton_Click;
 			Action<int> act = OnColorSelected;
 			colorDialog = new ColorPickerDialog(this, 0, new ColorSelectedListener(act));
+			switchBT.CheckedChange += SwitchBT_CheckedChange;
+			switchBT.Click += SwitchBT_Click;
+			fanButton.Click += FanButton_Click;
 
 		}
 
-		private void GetUIComponents()
-		{
-			buttonConnect = FindViewById<Button>(Resource.Id.button1);
-			buttonDisconnect = FindViewById<Button>(Resource.Id.button2);
-			buttonSendCommand = FindViewById<Button>(Resource.Id.button3);
-			temperatureButton = FindViewById<Button>(Resource.Id.button4);
-			humidityButton = FindViewById<Button>(Resource.Id.button5);
-			colorDialogButton = FindViewById<Button>(Resource.Id.button6);
-			temperatureText = FindViewById<TextView>(Resource.Id.textView1);
-			humidityText = FindViewById<TextView>(Resource.Id.textView2);
-			colorView = FindViewById<View>(Resource.Id.view1);
-		}
+
+
+
 		#endregion
 
 		#region Handlers
+		private void SwitchBT_Click(object sender, EventArgs e)
+		{
+			var sw = sender as Switch;
+
+			if (sw.Checked)
+			{
+				ButtonConnect_Click(sender, e);
+
+			}
+			else
+			{
+				ButtonDisconnect_Click(sender, e);
+
+			}
+			progressBar.Visibility = ViewStates.Invisible;
+
+
+		}
+
+		private void SwitchBT_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
+		{
+			progressBar.Visibility = ViewStates.Visible;
+		}
+
 		private void GetHumidity_Click(object sender, EventArgs e)
 		{
-			communicationService.Write(new byte[3] { (byte)CommandCode.StartMarker, (byte)CommandCode.ReadHumidity,(byte)CommandCode.EndMarker }); 
+			CheckHumidity();
+		}
+
+		private void CheckHumidity()
+		{
+			communicationService.Write(new byte[3] { (byte)CommandCode.StartMarker, (byte)CommandCode.ReadHumidity, (byte)CommandCode.EndMarker });
 		}
 
 		private void GetTemperature_Click(object sender, EventArgs e)
+		{
+			CheckTemperature();
+		}
+
+		private void CheckTemperature()
 		{
 			communicationService.Write(new byte[3] { (byte)CommandCode.StartMarker, (byte)CommandCode.ReadTemperature, (byte)CommandCode.EndMarker });
 		}
 
 		private void ButtonConnect_Click(object sender, EventArgs e)
 		{
+
+
 			if (communicationService.Connect())
 			{
-				buttonDisconnect.Enabled = true;
-				buttonConnect.Enabled = false;
+			
 				temperatureButton.Enabled = true;
 				humidityButton.Enabled = true;
-				buttonSendCommand.Enabled = true;
+				buttonLightCommand.Enabled = true;
+				CheckTemperature();
+				CheckHumidity();
 			}
 		}
 
@@ -118,6 +167,7 @@ namespace TerraControl
 		{
 				if(isSendClicked == false)
 				{
+					
 					List<byte> message = new List<byte>() { (byte)CommandCode.StartMarker };
 
 					message.Add((byte)CommandCode.LightOn);
@@ -129,25 +179,23 @@ namespace TerraControl
 					communicationService.Write(message.ToArray());
 
 					isSendClicked = true;
-					buttonSendCommand.Text = "Light off.";
+					buttonLightText.Text = "OFF.";
 				}
 				else
 				{
 					communicationService.Write(new byte[3] { (byte)CommandCode.StartMarker, (byte)CommandCode.LightOff, (byte)CommandCode.EndMarker });
 
 					isSendClicked = false;
-					buttonSendCommand.Text = "Light on.";
+					buttonLightText.Text = "ON";
 				}
+			buttonLightCommand.SetBackgroundColor(BackgroundConverter.GetFromBool(isSendClicked));
 		}
 
 		private void ButtonDisconnect_Click(object sender, System.EventArgs e)
 		{
-			buttonDisconnect.Enabled = false;
 			temperatureButton.Enabled = false;
 			humidityButton.Enabled = false;
-			buttonSendCommand.Enabled = false;
-			buttonConnect.Enabled = true;
-
+			buttonLightCommand.Enabled = false;
 			communicationService.Disconnect();
 		}
 
@@ -155,13 +203,28 @@ namespace TerraControl
 		{
 			colorDialog.Show();
 		}
-
+		private void FanButton_Click(object sender, EventArgs e)
+		{
+			if(isFanOn)
+			{
+				communicationService.Write(new byte[3] { (byte)CommandCode.StartMarker, (byte)CommandCode.FanOff, (byte)CommandCode.EndMarker });
+				isFanOn = false;
+			}
+			else
+			{
+				communicationService.Write(new byte[3] { (byte)CommandCode.StartMarker, (byte)CommandCode.FanOn, (byte)CommandCode.EndMarker });
+				isFanOn = true;
+			}
+			fanButton.SetBackgroundColor(BackgroundConverter.GetFromBool(isFanOn));
+		}
 		#endregion
 
 		public void OnColorSelected(int color)
 		{
 			this.color = new Color(color);
-			colorView.SetBackgroundColor(this.color);
+			colorDialogButton.SetBackgroundColor(this.color);
+
+			//buttonLightText.SetTextColor(color);
 
 			List<byte> message = new List<byte>() { (byte)CommandCode.StartMarker };
 			message.Add(this.color.R);

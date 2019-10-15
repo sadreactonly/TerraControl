@@ -7,7 +7,9 @@
 		ReadTemperature = 0x11,
 		ReadHumidity = 0x12,
 		LightOn	= 0x13,
-		LightOff = 0x14
+		LightOff = 0x14,
+		FanOn = 0x15,
+		FanOff = 0x16
 
 	}
 }

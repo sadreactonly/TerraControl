@@ -7,93 +7,187 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:id="@+id/linearLayout1" >
-        <LinearLayout
+	<LinearLayout
         android:orientation="horizontal"
         android:minWidth="25px"
         android:minHeight="25px"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout2" >
-           <Button
-		    android:text="Connect"
-		    android:layout_width="wrap_content"
-		    android:layout_height="match_parent"
-		    android:id="@+id/button1" />
-	       <Button
-		    android:text="Disconnect"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:id="@+id/button2" />
-     </LinearLayout>
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/switch1" />
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/progressBar1" 
+        android:visibility="invisible"/>		
+	</LinearLayout>
 	<View
     android:layout_width="match_parent"
     android:layout_height="1dp"
     android:background="@android:color/darker_gray"/>
-    <LinearLayout
+	<LinearLayout
         android:orientation="horizontal"
         android:minWidth="25px"
         android:minHeight="25px"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:id="@+id/linearLayout6" >
+
+		<LinearLayout
+        android:orientation="vertical"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout3">
-        <Button
-        android:text="Get temperature"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:id="@+id/button4" />
-        <TextView
+			<ImageButton
+            android:src="@drawable/thermometer"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/imageButton2" />
+			<TextView
             android:text="No Data"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:id="@+id/textView1"/>    
-    </LinearLayout>
-   
-    <LinearLayout
-        android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:id="@+id/textView1"/>
+		</LinearLayout>
+        <View
+            android:layout_width="15dp"
+            android:layout_height="5dp"
+            android:id="@+id/view3" />
+
+		<LinearLayout
+        android:orientation="vertical"
         android:minWidth="25px"
         android:minHeight="25px"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout4">
-        <Button
-            android:text="Get humidity"
-            android:layout_width="wrap_content"
+			<ImageButton
+            android:src="@drawable/humidity"
+             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/button5" />
-        <TextView
+            android:id="@+id/imageButton1" /> 
+			<TextView
             android:text="No data"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
+            android:gravity="center_horizontal"
             android:id="@+id/textView2"/>
-    </LinearLayout>   
+		</LinearLayout>   
 
-
-    <LinearLayout
+	</LinearLayout>
+	<LinearLayout
         android:orientation="horizontal"
         android:minWidth="25px"
         android:minHeight="25px"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayout5" >
-    <Button
-		android:text="Light on."
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:id="@+id/button3" />
+        android:gravity="center_horizontal"
+        android:id="@+id/linearLayout7" >
+		<LinearLayout
+            android:orientation="vertical"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout8">
+			<ImageButton
+            android:src="@drawable/bulb"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/imageButton3" />
+			<TextView
+            android:text="OFF"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:id="@+id/textView3" />
+		</LinearLayout>
+        <View
+            android:layout_width="15dp"
+            android:layout_height="5dp"
+            android:id="@+id/view2" />
+		<LinearLayout
+            android:orientation="vertical"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout9" >
+			<ImageButton
+                android:src="@drawable/pipette"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/imageButton4"/>
+			<TextView
+                android:text="LED color"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:id="@+id/textView4" />
+		</LinearLayout>
+	</LinearLayout>
 
-    <Button
-        android:text="Set color"
-       	android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-        android:id="@+id/button6" />
-    <View
-            android:layout_width="50dp"
-            android:layout_height="48dp"
+	<LinearLayout
+        android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:id="@+id/linearLayout10" >
+		<LinearLayout
+            android:orientation="vertical"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout11">
+			<ImageButton
+                android:src="@drawable/air"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/imageButton5" />
+            <TextView
+                android:text="OFF"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView5" />
+		</LinearLayout>
+        <View
+            android:layout_width="15dp"
+            android:layout_height="5dp"
             android:id="@+id/view1" />
-      </LinearLayout>
-
+        <LinearLayout
+            android:orientation="vertical"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout12">
+            <ImageButton
+                android:src="@drawable/fluid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageButton6" />
+            <TextView
+                android:text="OFF"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView6" />  
+            
+        </LinearLayout>
+	</LinearLayout>
 </LinearLayout>

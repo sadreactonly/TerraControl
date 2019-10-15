@@ -123,6 +123,9 @@ namespace TerraControl.Services
 			byte[] read = new byte[1];
 			var temperatureText = activity.FindViewById<TextView>(Resource.Id.textView1);
 			var humidityText = activity.FindViewById<TextView>(Resource.Id.textView2);
+			var temperatureButton = activity.FindViewById<ImageButton>(Resource.Id.imageButton2);
+			var humidityButton = activity.FindViewById<ImageButton>(Resource.Id.imageButton1);
+
 			List<byte> buffer = new List<byte>();
 			while (true)
 			{
@@ -144,12 +147,15 @@ namespace TerraControl.Services
 							if (result[0] == 'T')
 							{
 								temperatureText.Text = "\t" + (int)result[1] + " °C";
+								temperatureButton.SetBackgroundColor(BackgroundConverter.GetFromTemperature((int)result[1]));
 								buffer = new List<byte>();
 							}
 							else if (result[0] == 'H')
 							{
 								humidityText.Text = "\t" + (int)result[1] + " %";
 								buffer = new List<byte>();
+								humidityButton.SetBackgroundColor(BackgroundConverter.GetFromHumidity((int)result[1]));
+
 							}
 
 						});
