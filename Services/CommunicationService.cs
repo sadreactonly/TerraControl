@@ -1,19 +1,13 @@
 ﻿using System;
 using Android.App;
-using Android.OS;
-using Android.Support.V7.App;
-using Android.Runtime;
 using Android.Widget;
 using Android.Bluetooth;
-using Android.Views;
 using System.Threading;
 using System.Linq;
 using Android.Util;
 using System.Collections.Generic;
-using Android.Content;
-using System.Text;
 using Android.Graphics;
-using System.Reflection;
+
 namespace TerraControl.Services
 {
 	public class CommunicationService
@@ -25,8 +19,7 @@ namespace TerraControl.Services
 		BluetoothAdapter adapter = BluetoothAdapter.DefaultAdapter;
 		BluetoothDevice device;
 		Activity activity;
-		ProgressBar progressBar;
-
+		
 		public CommunicationService(Activity ac)
 		{
 			activity = ac;
@@ -39,7 +32,6 @@ namespace TerraControl.Services
 				BluetoothDisabledAlert();
 				return false;
 			}
-			///listenThread.Start();
 
 			adapter.StartDiscovery();
 
@@ -56,6 +48,7 @@ namespace TerraControl.Services
 			catch (Exception exception)
 			{
 				Log.Debug(TAG, exception.ToString());
+				//return false;
 			}
 
 			adapter.CancelDiscovery();
@@ -66,25 +59,19 @@ namespace TerraControl.Services
 
 			try
 			{
-
-					socket.Connect();
-		
-
-
+				socket.Connect();
 				listenThread = new Thread(Listener);
 				if (listenThread.IsAlive == false)
 				{
 					listenThread.Start();
 				}
-
-
 			}
 			catch (Exception exception)
 			{
 				Toast.MakeText(Application.Context, "Cannot connect to HC-06.", ToastLength.Short).Show();
 				Log.Debug(TAG, exception.ToString());
+				return false;
 			}
-
 
 			return true;
 		}
@@ -113,10 +100,8 @@ namespace TerraControl.Services
 
 		public void Write(byte[] bytes)
 		{
-
 			socket.OutputStream.Write(bytes, 0, bytes.Length);
 			socket.OutputStream.Close();
-
 		}
 		private async void Listener()
 		{
@@ -125,6 +110,10 @@ namespace TerraControl.Services
 			var humidityText = activity.FindViewById<TextView>(Resource.Id.textView2);
 			var temperatureButton = activity.FindViewById<ImageButton>(Resource.Id.imageButton2);
 			var humidityButton = activity.FindViewById<ImageButton>(Resource.Id.imageButton1);
+			var lightButton = activity.FindViewById<ImageButton>(Resource.Id.imageButton3);
+			var colorDialogButton = activity.FindViewById<ImageButton>(Resource.Id.imageButton4);
+			var switchBT = activity.FindViewById<Switch>(Resource.Id.switch1);
+			var fanButton = activity.FindViewById<ImageButton>(Resource.Id.imageButton5);
 
 			List<byte> buffer = new List<byte>();
 			while (true)
@@ -141,21 +130,46 @@ namespace TerraControl.Services
 					if (read[0] == 0xFF)
 					{
 						socket.InputStream.Close();
-						var result = Encoding.ASCII.GetString(buffer.ToArray());
 						activity.RunOnUiThread(() =>
 						{
-							if (result[0] == 'T')
+							if (buffer[0] == 'T')
 							{
-								temperatureText.Text = "\t" + (int)result[1] + " °C";
-								temperatureButton.SetBackgroundColor(BackgroundConverter.GetFromTemperature((int)result[1]));
+								temperatureText.Text = "\t" + (int)buffer[1] + " °C";
+								temperatureButton.SetBackgroundColor(BackgroundConverter.GetFromTemperature(buffer[1]));
 								buffer = new List<byte>();
 							}
-							else if (result[0] == 'H')
+							else if (buffer[0] == 'H')
 							{
-								humidityText.Text = "\t" + (int)result[1] + " %";
+								humidityText.Text = "\t" + (int)buffer[1] + " %";
+								humidityButton.SetBackgroundColor(BackgroundConverter.GetFromHumidity(buffer[1]));
 								buffer = new List<byte>();
-								humidityButton.SetBackgroundColor(BackgroundConverter.GetFromHumidity((int)result[1]));
+							}
+							else if (buffer[0] == 'C')
+							{
+								temperatureText.Text = "\t" + (int)buffer[1] + " °C";
+								humidityText.Text = "\t" + (int)buffer[2] + " %";
+								temperatureButton.SetBackgroundColor(BackgroundConverter.GetFromTemperature(buffer[1]));
+								humidityButton.SetBackgroundColor(BackgroundConverter.GetFromHumidity((int)buffer[2]));
+								if (buffer[3] == 0)
+								{
+									fanButton.SetBackgroundColor(BackgroundConverter.GetFromBool(false));
+								}
+								else
+								{
+									fanButton.SetBackgroundColor(BackgroundConverter.GetFromBool(true));
+								}
+								if (buffer[4] == 0)
+								{
+									lightButton.SetBackgroundColor(BackgroundConverter.GetFromBool(false));
+								}
+								else
+								{
+									lightButton.SetBackgroundColor(BackgroundConverter.GetFromBool(true));
+								}
+								colorDialogButton.SetBackgroundColor(new Color(buffer[5], buffer[6], buffer[7]));
+								(activity as MainActivity).Color = new Color(buffer[5], buffer[6], buffer[7]);
 
+								buffer = new List<byte>();
 							}
 
 						});
@@ -170,7 +184,6 @@ namespace TerraControl.Services
 
 		private void BluetoothDisabledAlert()
 		{
-
 			Android.App.AlertDialog.Builder dialog = new Android.App.AlertDialog.Builder(activity);
 			Android.App.AlertDialog alert = dialog.Create();
 			alert.SetTitle("Bluetooth alert");
@@ -180,8 +193,6 @@ namespace TerraControl.Services
 				// Ok button click task  
 			});
 			alert.Show();
-
 		}
-
 	}
 }

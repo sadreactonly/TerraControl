@@ -28,7 +28,11 @@
     android:layout_width="match_parent"
     android:layout_height="1dp"
     android:background="@android:color/darker_gray"/>
-	<LinearLayout
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:id="@+id/view4" />
+        <LinearLayout
         android:orientation="horizontal"
         android:minWidth="25px"
         android:minHeight="25px"
@@ -36,6 +40,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:id="@+id/linearLayout6" >
+
 
 		<LinearLayout
         android:orientation="vertical"
@@ -48,9 +53,10 @@
             android:src="@drawable/thermometer"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/imageButton2" />
+            android:id="@+id/imageButton2"
+            android:background = "@color/material_grey_100"/>
 			<TextView
-            android:text="No Data"
+            android:text="/"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -58,7 +64,7 @@
             android:id="@+id/textView1"/>
 		</LinearLayout>
         <View
-            android:layout_width="15dp"
+            android:layout_width="25dp"
             android:layout_height="5dp"
             android:id="@+id/view3" />
 
@@ -73,16 +79,16 @@
             android:src="@drawable/humidity"
              android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background = "@color/material_grey_100"
             android:id="@+id/imageButton1" /> 
 			<TextView
-            android:text="No data"
+            android:text="/"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
             android:id="@+id/textView2"/>
 		</LinearLayout>   
-
 	</LinearLayout>
 	<LinearLayout
         android:orientation="horizontal"
@@ -103,17 +109,11 @@
             android:src="@drawable/bulb"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background = "@color/material_grey_100"
             android:id="@+id/imageButton3" />
-			<TextView
-            android:text="OFF"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            android:id="@+id/textView3" />
 		</LinearLayout>
         <View
-            android:layout_width="15dp"
+            android:layout_width="25dp"
             android:layout_height="5dp"
             android:id="@+id/view2" />
 		<LinearLayout
@@ -127,10 +127,11 @@
                 android:src="@drawable/pipette"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:background = "@color/material_grey_100"
                 android:id="@+id/imageButton4"/>
 			<TextView
-                android:text="LED color"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Choose color"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal"
@@ -157,16 +158,12 @@
                 android:src="@drawable/air"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:background = "@color/material_grey_100"
                 android:id="@+id/imageButton5" />
-            <TextView
-                android:text="OFF"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView5" />
+
 		</LinearLayout>
         <View
-            android:layout_width="15dp"
+            android:layout_width="25dp"
             android:layout_height="5dp"
             android:id="@+id/view1" />
         <LinearLayout
@@ -180,13 +177,9 @@
                 android:src="@drawable/fluid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background = "@color/material_grey_100"
                 android:id="@+id/imageButton6" />
-            <TextView
-                android:text="OFF"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView6" />  
+           >  
             
         </LinearLayout>
 	</LinearLayout>
