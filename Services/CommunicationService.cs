@@ -18,18 +18,20 @@ namespace TerraControl.Services
 		BluetoothSocket socket;
 		BluetoothAdapter adapter = BluetoothAdapter.DefaultAdapter;
 		BluetoothDevice device;
-		Activity activity;
-		
-		public CommunicationService(Activity ac)
+
+		public delegate void Result(List<byte> resultBuffer);
+		public event Result ResultEvent;
+		public event EventHandler BluetoothDisabledEvent;
+
+		public CommunicationService()
 		{
-			activity = ac;
 		}
 
 		public bool Connect()
 		{
 			if (!adapter.IsEnabled)
 			{
-				BluetoothDisabledAlert();
+				BluetoothDisabledEvent.Invoke(this, new EventArgs());
 				return false;
 			}
 
@@ -42,20 +44,15 @@ namespace TerraControl.Services
 				device.Dispose();
 				device.SetPairingConfirmation(true);
 				device.CreateBond();
-
-
 			}
 			catch (Exception exception)
 			{
 				Log.Debug(TAG, exception.ToString());
-				//return false;
 			}
 
 			adapter.CancelDiscovery();
 
-
 			socket = device.CreateRfcommSocketToServiceRecord(Java.Util.UUID.FromString("00001101-0000-1000-8000-00805f9b34fb"));
-
 
 			try
 			{
@@ -103,17 +100,10 @@ namespace TerraControl.Services
 			socket.OutputStream.Write(bytes, 0, bytes.Length);
 			socket.OutputStream.Close();
 		}
-		private async void Listener()
+
+		private void Listener()
 		{
 			byte[] read = new byte[1];
-			var temperatureText = activity.FindViewById<TextView>(Resource.Id.textView1);
-			var humidityText = activity.FindViewById<TextView>(Resource.Id.textView2);
-			var temperatureButton = activity.FindViewById<ImageButton>(Resource.Id.imageButton2);
-			var humidityButton = activity.FindViewById<ImageButton>(Resource.Id.imageButton1);
-			var lightButton = activity.FindViewById<ImageButton>(Resource.Id.imageButton3);
-			var colorDialogButton = activity.FindViewById<ImageButton>(Resource.Id.imageButton4);
-			var switchBT = activity.FindViewById<Switch>(Resource.Id.switch1);
-			var fanButton = activity.FindViewById<ImageButton>(Resource.Id.imageButton5);
 
 			List<byte> buffer = new List<byte>();
 			while (true)
@@ -130,69 +120,13 @@ namespace TerraControl.Services
 					if (read[0] == 0xFF)
 					{
 						socket.InputStream.Close();
-						activity.RunOnUiThread(() =>
-						{
-							if (buffer[0] == 'T')
-							{
-								temperatureText.Text = "\t" + (int)buffer[1] + " °C";
-								temperatureButton.SetBackgroundColor(BackgroundConverter.GetFromTemperature(buffer[1]));
-								buffer = new List<byte>();
-							}
-							else if (buffer[0] == 'H')
-							{
-								humidityText.Text = "\t" + (int)buffer[1] + " %";
-								humidityButton.SetBackgroundColor(BackgroundConverter.GetFromHumidity(buffer[1]));
-								buffer = new List<byte>();
-							}
-							else if (buffer[0] == 'C')
-							{
-								temperatureText.Text = "\t" + (int)buffer[1] + " °C";
-								humidityText.Text = "\t" + (int)buffer[2] + " %";
-								temperatureButton.SetBackgroundColor(BackgroundConverter.GetFromTemperature(buffer[1]));
-								humidityButton.SetBackgroundColor(BackgroundConverter.GetFromHumidity((int)buffer[2]));
-								if (buffer[3] == 0)
-								{
-									fanButton.SetBackgroundColor(BackgroundConverter.GetFromBool(false));
-								}
-								else
-								{
-									fanButton.SetBackgroundColor(BackgroundConverter.GetFromBool(true));
-								}
-								if (buffer[4] == 0)
-								{
-									lightButton.SetBackgroundColor(BackgroundConverter.GetFromBool(false));
-								}
-								else
-								{
-									lightButton.SetBackgroundColor(BackgroundConverter.GetFromBool(true));
-								}
-								colorDialogButton.SetBackgroundColor(new Color(buffer[5], buffer[6], buffer[7]));
-								(activity as MainActivity).Color = new Color(buffer[5], buffer[6], buffer[7]);
-
-								buffer = new List<byte>();
-							}
-
-						});
-
+						ResultEvent?.Invoke(buffer);
 					}
 
 				}
 				catch (Exception exception) { Log.Debug(TAG, exception.ToString()); }
 
 			}
-		}
-
-		private void BluetoothDisabledAlert()
-		{
-			Android.App.AlertDialog.Builder dialog = new Android.App.AlertDialog.Builder(activity);
-			Android.App.AlertDialog alert = dialog.Create();
-			alert.SetTitle("Bluetooth alert");
-			alert.SetMessage("Turn on bluetooth.");
-			alert.SetButton("OK", (c, ev) =>
-			{
-				// Ok button click task  
-			});
-			alert.Show();
 		}
 	}
 }

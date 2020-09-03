@@ -19,6 +19,7 @@ namespace TerraControl
 
 		GUIManager()
 		{
+
 		}
 
 		public static GUIManager Instance

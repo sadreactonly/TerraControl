@@ -22,8 +22,12 @@ namespace TerraControl
 		public ImageButton WaterButton { get; set; }
 		public Switch WwitchBT { get; set; }
 		public ColorPickerDialog colorDialog { get; set; }
+		public TextView temperatureText;
+		public TextView humidityText;
 
-		CommunicationService communicationService;
+
+		private CommunicationService communicationService;
+		private ResponseEngine responseEngine;
 		public Color Color { get; set; } = new Color(0, 0, 0);
 
 		bool isFanOn = false;
@@ -35,11 +39,59 @@ namespace TerraControl
 			Xamarin.Essentials.Platform.Init(this, savedInstanceState);
 
 			SetContentView(Resource.Layout.activity_main);
-			communicationService = new CommunicationService(this);
+			
+			communicationService = new CommunicationService();
+			responseEngine = new ResponseEngine();
+			
+			communicationService.BluetoothDisabledEvent += BluetoothDisabled;
+			communicationService.ResultEvent += CommunicationService_ResultEvent;
+
+			responseEngine.HandleConfigurationParsedEvent += ResponseEngine_HandleConfigurationParsedEvent;
+			responseEngine.HandleTempertureEvent += ResponseEngine_HandleTempertureEvent;
+			responseEngine.HandleHumidityEvent += ResponseEngine_HandleHumidityEvent;
 
 			GetUIComponents();
 			SetUIComponents(false);
 			SetUIComponentsHandlers();
+		}
+
+		private void ResponseEngine_HandleHumidityEvent(int humidity)
+		{
+			humidityText.Text = "\t" + humidity + " %";
+			HumidityButton.SetBackgroundColor(BackgroundConverter.GetFromHumidity(humidity));
+		}
+
+		private void ResponseEngine_HandleTempertureEvent(int temp)
+		{
+			temperatureText.Text = "\t" + temp + " °C";
+			TemperatureButton.SetBackgroundColor(BackgroundConverter.GetFromTemperature(temp));
+		}
+
+		private void ResponseEngine_HandleConfigurationParsedEvent(int temperatureText, int humidityText, bool isFanOn, bool isLightOn, int R, int G, int B)
+		{
+			ResponseEngine_HandleTempertureEvent(temperatureText);
+			ResponseEngine_HandleHumidityEvent(humidityText);
+			FanButton.SetBackgroundColor(BackgroundConverter.GetFromBool(isFanOn));
+			LightButton.SetBackgroundColor(BackgroundConverter.GetFromBool(isLightOn));
+			ColorDialogButton.SetBackgroundColor(new Color(R,G,B));
+		}
+
+		private void CommunicationService_ResultEvent(System.Collections.Generic.List<byte> resultBuffer)
+		{
+			responseEngine.ParseResultBuffer(resultBuffer.ToArray());
+		}
+
+		private void BluetoothDisabled(object sender, EventArgs e)
+		{
+			Android.App.AlertDialog.Builder dialog = new Android.App.AlertDialog.Builder(this);
+			Android.App.AlertDialog alert = dialog.Create();
+			alert.SetTitle("Bluetooth alert");
+			alert.SetMessage("Turn on bluetooth.");
+			alert.SetButton("OK", (c, ev) =>
+			{
+				// Ok button click task  
+			});
+			alert.Show();
 		}
 
 		public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
@@ -59,7 +111,9 @@ namespace TerraControl
 			WwitchBT = FindViewById<Switch>(Resource.Id.switch1);
 			FanButton = FindViewById<ImageButton>(Resource.Id.imageButton5);
 			WaterButton = FindViewById<ImageButton>(Resource.Id.imageButton6);
-		}
+			temperatureText = FindViewById<TextView>(Resource.Id.textView1);
+		    humidityText = FindViewById<TextView>(Resource.Id.textView2);
+	}
 		private void SetUIComponents(bool isEnabled)
 		{
 			TemperatureButton.Enabled = isEnabled;
